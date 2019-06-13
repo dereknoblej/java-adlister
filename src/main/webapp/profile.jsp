@@ -11,6 +11,6 @@
     <div class="container">
         <h1>Viewing your profile.</h1>
     </div>
-
+    <a href="/logout">logout</a>
 </body>
 </html>
