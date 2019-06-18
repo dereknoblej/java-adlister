@@ -41,9 +41,13 @@ public class MySQLAdsDao implements Ads {
     @Override
     public Long insert(Ad ad) {
         try {
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate(createInsertQuery(ad), Statement.RETURN_GENERATED_KEYS);
-            ResultSet rs = stmt.getGeneratedKeys();
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into ads (users_id, title, description) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setLong(1, ad.getUserId());
+            preparedStatement.setString(2,ad.getTitle());
+            preparedStatement.setString(3,ad.getDescription());
+
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
             rs.next();
             return rs.getLong(1);
         } catch (SQLException e) {
@@ -61,7 +65,7 @@ public class MySQLAdsDao implements Ads {
     private Ad extractAd(ResultSet rs) throws SQLException {
         return new Ad(
             rs.getLong("id"),
-            rs.getLong("user_id"),
+            rs.getLong("users_id"),
             rs.getString("title"),
             rs.getString("description")
         );
